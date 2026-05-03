@@ -180,6 +180,10 @@ function App() {
           </div>
         </div>
       )}
+
+      <footer className="app-footer">
+        © Antigravity AI 2026 | Abdelkader Ait Assou
+      </footer>
     </div>
   );
 }

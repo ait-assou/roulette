@@ -252,3 +252,16 @@ h1 {
   .stage-left, .stage-right { flex: none; height: auto; }
   .wheel-container { width: 320px; height: 320px; }
 }
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 100;
+}
