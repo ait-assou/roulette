@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const Wheel = ({ leaders, members, onAllPairsFormed, t }) => {
+const Wheel = ({ leaders, members, extraAssignments, onAllPairsFormed, t }) => {
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [phase, setPhase] = useState('intro-inner'); 
+  const [alignmentOffset, setAlignmentOffset] = useState(0);
   const audioCtx = useRef(null);
 
   const numSegments = leaders.length;
@@ -49,6 +50,7 @@ const Wheel = ({ leaders, members, onAllPairsFormed, t }) => {
     const totalRotation = rotation + (360 * fullRots) + alignmentAngle;
     
     setRotation(totalRotation);
+    setAlignmentOffset(alignmentIndex);
 
     setTimeout(() => {
       setIsSpinning(false);
@@ -89,7 +91,13 @@ const Wheel = ({ leaders, members, onAllPairsFormed, t }) => {
           {members.map((member, i) => {
             const rotate = i * angleStep;
             const skewY = 90 - angleStep;
-            const memberCount = member.names.length;
+            const matchedLeaderIndex = (i + alignmentOffset) % numSegments;
+            const matchedLeader = leaders[matchedLeaderIndex];
+            const extras = extraAssignments?.[matchedLeaderIndex] || [];
+            const displayNames = phase === 'reveal' 
+              ? [matchedLeader.name, ...member.names, ...extras] 
+              : member.names;
+            const memberCount = displayNames.length;
             
             return (
               <div key={member.id} className="segment" style={{ transform: `rotate(${rotate}deg) skewY(-${skewY}deg)`, backgroundColor: colors[i % colors.length] }}>
@@ -100,7 +108,7 @@ const Wheel = ({ leaders, members, onAllPairsFormed, t }) => {
                   fontWeight: '800',
                   lineHeight: '1.2'
                 }}>
-                  {member.names.map((name, idx) => {
+                  {displayNames.map((name, idx) => {
                     const totalRotation = rotation + rotate + (angleStep / 2);
                     return (
                       <div key={idx} style={{ 
@@ -130,7 +138,7 @@ const Wheel = ({ leaders, members, onAllPairsFormed, t }) => {
           }}
         >
           <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-            {leaders.map((leader, i) => (
+            {phase !== 'reveal' && leaders.map((leader, i) => (
               <div key={leader.id} style={{ 
                 position: 'absolute', 
                 top: '50%', 

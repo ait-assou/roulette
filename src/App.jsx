@@ -73,6 +73,7 @@ function App() {
   const [leaders, setLeaders] = useState([]);
   const [members, setMembers] = useState([]); // This will store arrays for 3/4 person groups
   const [extraStudents, setExtraStudents] = useState([]);
+  const [extraAssignments, setExtraAssignments] = useState({});
   const [finalGroups, setFinalGroups] = useState([]);
 
   const t = translations[lang];
@@ -109,6 +110,19 @@ function App() {
     const extras = shuffled.slice(numGroups + (numGroups * membersPerGroup));
     setExtraStudents(extras);
     
+    // Pre-calculate extra assignments so the wheel can show them
+    const assignments = {};
+    if (extras.length > 0) {
+      const availableIndices = Array.from({ length: numGroups }, (_, i) => i);
+      const shuffledIndices = [...availableIndices].sort(() => Math.random() - 0.5);
+      extras.forEach((student, i) => {
+        const targetIndex = shuffledIndices[i % numGroups];
+        if (!assignments[targetIndex]) assignments[targetIndex] = [];
+        assignments[targetIndex].push(student);
+      });
+    }
+    setExtraAssignments(assignments);
+    
     setLeaders(leadersList);
     setMembers(membersList);
     setStep('pairing');
@@ -116,23 +130,11 @@ function App() {
 
   const handleAllPairsFormed = (formedPairs) => {
     // formedPairs is [{ leader, member: { names: [...] } }]
-    let groups = formedPairs.map(p => ({
+    let groups = formedPairs.map((p, i) => ({
       leader: p.leader,
       members: p.member.names,
-      extra: null
+      extras: extraAssignments[i] || null
     }));
-
-    // Distribute extras randomly to different groups
-    if (extraStudents.length > 0) {
-      const availableIndices = Array.from({ length: groups.length }, (_, i) => i);
-      const shuffledIndices = [...availableIndices].sort(() => Math.random() - 0.5);
-      
-      extraStudents.forEach((student, i) => {
-        const targetIndex = shuffledIndices[i % groups.length];
-        if (!groups[targetIndex].extras) groups[targetIndex].extras = [];
-        groups[targetIndex].extras.push(student);
-      });
-    }
     
     setFinalGroups(groups);
   };
@@ -160,6 +162,7 @@ function App() {
               <Wheel 
                 leaders={leaders} 
                 members={members} 
+                extraAssignments={extraAssignments}
                 onAllPairsFormed={handleAllPairsFormed}
                 t={t}
                 isMulti={groupSize > 2}
