@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 
 const InputForm = ({ onNamesSubmit, t }) => {
-  const [names, setNames] = useState([]); // Start with empty or list below
+  const [names, setNames] = useState([]); 
   const [newName, setNewName] = useState('');
   const [groupSize, setGroupSize] = useState(2);
+  const [customSize, setCustomSize] = useState(4); // Keep track of the highest custom size
 
   const handleAddStudent = (e) => {
     if (e) e.preventDefault();
     if (newName.trim() === '') return;
-    setNames([newName.trim(), ...names]); // Prepended as requested: "placed just below the add button"
+    setNames([newName.trim(), ...names]); 
     setNewName('');
   };
 
@@ -17,17 +18,39 @@ const InputForm = ({ onNamesSubmit, t }) => {
     setNames(newNames);
   };
 
+  const incrementSize = () => {
+    const nextSize = customSize < 10 ? customSize + 1 : customSize;
+    setCustomSize(nextSize);
+    setGroupSize(nextSize);
+  };
+
+  const decrementSize = () => {
+    if (customSize > 4) {
+      const nextSize = customSize - 1;
+      setCustomSize(nextSize);
+      if (groupSize === customSize) {
+        setGroupSize(nextSize);
+      }
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const filteredNames = names.filter(n => n.trim() !== '');
     if (filteredNames.length >= groupSize) {
       onNamesSubmit(filteredNames, groupSize);
     } else {
-      alert(t.mode2 === 'Binôme (2)' 
+      alert(t.mode2 === 'Binôme' 
         ? `Veuillez ajouter au moins ${groupSize} étudiants !` 
         : `Please add at least ${groupSize} students!`);
     }
   };
+
+  // Predefined sizes + the active custom size if any
+  const displaySizes = [2, 3, 4];
+  if (customSize > 4) {
+    displaySizes.push(customSize);
+  }
 
   return (
     <div className="glass-card" style={{ width: '100%', maxWidth: '480px', height: 'auto', maxHeight: '95vh', padding: '1.5rem' }}>
@@ -40,9 +63,11 @@ const InputForm = ({ onNamesSubmit, t }) => {
           background: 'rgba(0,0,0,0.2)', 
           padding: '4px', 
           borderRadius: '12px',
-          gap: '4px'
+          gap: '4px',
+          alignItems: 'center',
+          overflowX: 'auto'
         }}>
-          {[2, 3, 4].map(size => (
+          {displaySizes.map(size => (
             <button
               key={size}
               type="button"
@@ -53,16 +78,70 @@ const InputForm = ({ onNamesSubmit, t }) => {
                 borderRadius: '8px',
                 border: 'none',
                 cursor: 'pointer',
-                fontSize: '0.75rem',
+                fontSize: '0.7rem',
                 fontWeight: 700,
                 transition: 'all 0.3s',
                 background: groupSize === size ? 'var(--accent-primary)' : 'transparent',
-                color: groupSize === size ? 'white' : 'var(--text-muted)'
+                color: groupSize === size ? 'white' : 'var(--text-muted)',
+                whiteSpace: 'nowrap',
+                minWidth: '60px'
               }}
             >
-              {t[`mode${size}`]}
+              {size <= 4 ? t[`mode${size}`] : t.customGroup.replace('{n}', size)}
             </button>
           ))}
+          {customSize > 4 && (
+            <button
+              type="button"
+              onClick={decrementSize}
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '1.2rem',
+                fontWeight: 700,
+                background: 'rgba(255,255,255,0.1)',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.3s',
+                marginLeft: '4px',
+                flexShrink: 0
+              }}
+              onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
+              onMouseOut={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
+            >
+              -
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={incrementSize}
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '1.2rem',
+              fontWeight: 700,
+              background: 'rgba(255,255,255,0.1)',
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s',
+              marginLeft: customSize > 4 ? '4px' : 'auto',
+              flexShrink: 0
+            }}
+            onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
+            onMouseOut={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
+          >
+            +
+          </button>
         </div>
       </div>
 

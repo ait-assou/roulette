@@ -31,7 +31,8 @@ const translations = {
     mode2: "Binôme",
     mode3: "Trinôme",
     mode4: "Quadrinôme",
-    emptyList: "La liste est vide"
+    emptyList: "La liste est vide",
+    customGroup: "Groupe de {n}"
   },
   en: {
     metaTitle: "Student Pairing Wheel | Interactive Classroom Tool",
@@ -59,7 +60,8 @@ const translations = {
     mode2: "Pair",
     mode3: "Trio",
     mode4: "Quad",
-    emptyList: "List is empty"
+    emptyList: "List is empty",
+    customGroup: "Group of {n}"
   }
 };
 
