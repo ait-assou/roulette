@@ -9,10 +9,10 @@ const translations = {
     metaTitle: "La Roue des Binômes | Outil de Classe Interactif",
     title: "La Roue des Groupes",
     setupTitle: "Configuration de la Classe",
-    setupSubtitle: "Entrez les noms des élèves pour commencer.",
+    setupSubtitle: "Entrez les noms des étudiants pour commencer.",
     addStudent: "+ Ajouter",
     startPairing: "Démarrer le Tirage",
-    readyToPair: "Prêt pour le tirage de {count} élèves.",
+    readyToPair: "Prêt pour le tirage de {count} étudiants.",
     spinOnce: "LANCER LA ROUE",
     revealing: "TIRAGE EN COURS...",
     matched: "GROUPES FORMÉS !",
@@ -28,9 +28,10 @@ const translations = {
     spinToAlign: "La roue va aligner tous les binômes en un seul tour.",
     matchedText: "ASSORTIS !",
     groupSize: "Taille des Groupes",
-    mode2: "Binôme (2)",
-    mode3: "Trinôme (3)",
-    mode4: "Quadrinôme (4)"
+    mode2: "Binôme",
+    mode3: "Trinôme",
+    mode4: "Quadrinôme",
+    emptyList: "La liste est vide"
   },
   en: {
     metaTitle: "Student Pairing Wheel | Interactive Classroom Tool",
@@ -55,9 +56,10 @@ const translations = {
     spinToAlign: "The wheel will align all groups in a single spin.",
     matchedText: "MATCHED!",
     groupSize: "Group Size",
-    mode2: "Pair (2)",
-    mode3: "Trio (3)",
-    mode4: "Quad (4)"
+    mode2: "Pair",
+    mode3: "Trio",
+    mode4: "Quad",
+    emptyList: "List is empty"
   }
 };
 
@@ -84,7 +86,7 @@ function App() {
     
     const numGroups = Math.floor(count / size);
     if (numGroups === 0) {
-      alert(lang === 'fr' ? 'Pas assez d\'élèves !' : 'Not enough students!');
+      alert(lang === 'fr' ? 'Pas assez d\'étudiants !' : 'Not enough students!');
       return;
     }
 

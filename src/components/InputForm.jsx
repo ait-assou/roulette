@@ -24,7 +24,7 @@ const InputForm = ({ onNamesSubmit, t }) => {
       onNamesSubmit(filteredNames, groupSize);
     } else {
       alert(t.mode2 === 'Binôme (2)' 
-        ? `Veuillez ajouter au moins ${groupSize} élèves !` 
+        ? `Veuillez ajouter au moins ${groupSize} étudiants !` 
         : `Please add at least ${groupSize} students!`);
     }
   };
@@ -142,7 +142,7 @@ const InputForm = ({ onNamesSubmit, t }) => {
           ))}
           {names.length === 0 && (
             <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8rem', padding: '1rem' }}>
-              {t.mode2 === 'Binôme (2)' ? 'Liste vide' : 'List is empty'}
+              {t.emptyList}
             </div>
           )}
         </div>
