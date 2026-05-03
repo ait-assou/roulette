@@ -89,10 +89,22 @@ const Wheel = ({ leaders, members, onAllPairsFormed, t }) => {
           {members.map((member, i) => {
             const rotate = i * angleStep;
             const skewY = 90 - angleStep;
+            const memberCount = member.names.length;
+            
             return (
               <div key={member.id} className="segment" style={{ transform: `rotate(${rotate}deg) skewY(-${skewY}deg)`, backgroundColor: colors[i % colors.length] }}>
-                <div className="segment-content" style={{ transform: `skewY(${skewY}deg) rotate(${angleStep / 2}deg)`, paddingBottom: numSegments > 8 ? '40px' : '70px', fontSize: numSegments > 10 ? '0.7rem' : '0.9rem', fontWeight: '800' }}>
-                  {member.name}
+                <div className="segment-content" style={{ 
+                  transform: `skewY(${skewY}deg) rotate(${angleStep / 2}deg)`, 
+                  paddingBottom: numSegments > 8 ? '40px' : '70px', 
+                  fontSize: numSegments > 10 || memberCount > 1 ? '0.7rem' : '0.9rem', 
+                  fontWeight: '800',
+                  lineHeight: '1.2'
+                }}>
+                  {member.names.map((name, idx) => (
+                    <div key={idx} style={{ marginBottom: memberCount > 1 ? '4px' : '0' }}>
+                      {name}
+                    </div>
+                  ))}
                 </div>
               </div>
             );
