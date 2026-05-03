@@ -100,11 +100,18 @@ const Wheel = ({ leaders, members, onAllPairsFormed, t }) => {
                   fontWeight: '800',
                   lineHeight: '1.2'
                 }}>
-                  {member.names.map((name, idx) => (
-                    <div key={idx} style={{ marginBottom: memberCount > 1 ? '4px' : '0' }}>
-                      {name}
-                    </div>
-                  ))}
+                  {member.names.map((name, idx) => {
+                    const totalRotation = rotation + rotate + (angleStep / 2);
+                    return (
+                      <div key={idx} style={{ 
+                        marginBottom: memberCount > 1 ? '4px' : '0',
+                        transform: phase === 'reveal' ? `rotate(${-totalRotation}deg)` : 'rotate(0deg)',
+                        transition: 'transform 0.5s ease'
+                      }}>
+                        {name}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -124,13 +131,23 @@ const Wheel = ({ leaders, members, onAllPairsFormed, t }) => {
         >
           <div style={{ position: 'relative', width: '100%', height: '100%' }}>
             {leaders.map((leader, i) => (
-              <div key={leader.id} style={{ position: 'absolute', top: '50%', left: '50%', transform: `translate(-50%, -50%) rotate(${i * angleStep}deg) translateY(-${numSegments > 8 ? 60 : 80}px)`, color: 'white', fontWeight: '900', fontSize: numSegments > 10 ? '0.7rem' : '1rem', textAlign: 'center' }}>
+              <div key={leader.id} style={{ 
+                position: 'absolute', 
+                top: '50%', 
+                left: '50%', 
+                transform: `translate(-50%, -50%) rotate(${i * angleStep}deg) translateY(-${numSegments > 8 ? 60 : 80}px) ${phase === 'reveal' ? `rotate(-${i * angleStep}deg)` : 'rotate(0deg)'}`, 
+                color: 'white', 
+                fontWeight: '900', 
+                fontSize: numSegments > 10 ? '0.7rem' : '1rem', 
+                textAlign: 'center',
+                transition: 'transform 0.5s ease'
+              }}>
                 {leader.name}
               </div>
             ))}
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', width: '100%' }}>
               <div style={{ fontWeight: '900', color: 'white', fontSize: phase === 'reveal' ? '1.2rem' : '0.8rem', opacity: numSegments > 12 ? 0 : 1 }}>
-                {phase === 'reveal' ? t.matchedText : t.leader}
+                {phase === 'reveal' ? null : t.leader}
               </div>
             </div>
           </div>

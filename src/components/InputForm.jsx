@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
 const InputForm = ({ onNamesSubmit, t }) => {
-  const [names, setNames] = useState([]); 
+  const [names, setNames] = useState([
+    'Amaide', 'Sabine', 'Eddy', 'Vincent', 'Daniel', 'Benhale', 'Abdelkader', 'Andry', 'Marcio'
+  ]); 
   const [newName, setNewName] = useState('');
   const [groupSize, setGroupSize] = useState(2);
   const [customSize, setCustomSize] = useState(4); // Keep track of the highest custom size
