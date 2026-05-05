@@ -58,7 +58,7 @@ const Wheel = ({ leaders, members, extraAssignments, onAllPairsFormed, t }) => {
       const offset = alignmentIndex;
       const pairs = leaders.map((leader, i) => {
         const memberIndex = (i - offset + numSegments) % numSegments;
-        return { leader, member: members[memberIndex] };
+        return { leader, member: members[memberIndex], leaderIndex: i };
       });
       setTimeout(() => onAllPairsFormed(pairs), 1500);
     }, 3000);
@@ -157,21 +157,41 @@ const Wheel = ({ leaders, members, extraAssignments, onAllPairsFormed, t }) => {
           }}
         >
           <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-            {phase !== 'reveal' && leaders.map((leader, i) => (
-              <div key={leader.id} style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: `translate(-50%, -50%) rotate(${i * angleStep}deg) translateY(-${numSegments > 8 ? 60 : 80}px) ${phase === 'reveal' ? `rotate(-${i * angleStep}deg)` : 'rotate(0deg)'}`,
-                color: 'white',
-                fontWeight: '900',
-                fontSize: numSegments > 10 ? '0.7rem' : '1rem',
-                textAlign: 'center',
-                transition: 'transform 0.5s ease'
-              }}>
-                {leader.name}
-              </div>
-            ))}
+            {phase !== 'reveal' && leaders.map((leader, i) => {
+              const extras = extraAssignments?.[i] || [];
+              return (
+                <div key={leader.id} style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: `translate(-50%, -50%) rotate(${i * angleStep}deg) translateY(-${numSegments > 8 ? 60 : 80}px) ${phase === 'reveal' ? `rotate(-${i * angleStep}deg)` : 'rotate(0deg)'}`,
+                  color: 'white',
+                  fontWeight: '900',
+                  fontSize: numSegments > 10 ? '0.7rem' : '1rem',
+                  textAlign: 'center',
+                  transition: 'transform 0.5s ease',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <div>{leader.name}</div>
+                  {extras.length > 0 && (
+                    <div style={{
+                      fontSize: '0.7em',
+                      color: '#cbd5e1',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '2px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '1px'
+                    }}>
+                      {extras.map((ex, idx) => <div key={idx}>+ {ex}</div>)}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', width: '100%' }}>
               <div style={{ fontWeight: '900', color: 'white', fontSize: phase === 'reveal' ? '1.2rem' : '0.8rem', opacity: numSegments > 12 ? 0 : 1 }}>
                 {phase === 'reveal' ? t.matchedText : t.leader}

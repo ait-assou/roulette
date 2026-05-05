@@ -133,7 +133,7 @@ function App() {
     let groups = formedPairs.map((p) => ({
       leader: p.leader,
       members: p.member.names,
-      extras: extraAssignments[p.memberIndex] || null
+      extras: extraAssignments[p.leaderIndex] || null
     }));
 
     setFinalGroups(groups);
