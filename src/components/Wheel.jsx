@@ -126,8 +126,8 @@ const Wheel = ({ leaders, members, extraAssignments, onAllPairsFormed, t }) => {
                   justifyContent: 'center'
                 }}>
                   <div style={{
-                    transform: phase === 'reveal' ? `rotate(${-(rotation + midAngle)}deg)` : 'rotate(0deg)',
-                    transition: 'transform 0.5s ease',
+                    transform: `rotate(${-(rotation + midAngle)}deg)`,
+                    transition: isSpinning ? 'transform 3s cubic-bezier(0.15, 0, 0.15, 1)' : 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -164,12 +164,11 @@ const Wheel = ({ leaders, members, extraAssignments, onAllPairsFormed, t }) => {
                   position: 'absolute',
                   top: '50%',
                   left: '50%',
-                  transform: `translate(-50%, -50%) rotate(${i * angleStep}deg) translateY(-${numSegments > 8 ? 60 : 80}px) ${phase === 'reveal' ? `rotate(-${i * angleStep}deg)` : 'rotate(0deg)'}`,
+                  transform: `translate(-50%, -50%) rotate(${i * angleStep}deg) translateY(-${numSegments > 8 ? 60 : 80}px) rotate(-${i * angleStep}deg)`,
                   color: 'white',
                   fontWeight: '900',
                   fontSize: numSegments > 10 ? '0.7rem' : '1rem',
                   textAlign: 'center',
-                  transition: 'transform 0.5s ease',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
