@@ -148,19 +148,17 @@ const InputForm = ({ onNamesSubmit, t }) => {
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+        <form onSubmit={handleAddStudent} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
           <input
             type="text"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddStudent()}
             placeholder={t.setupSubtitle}
             className="input-field"
             style={{ width: '100%', fontSize: '1rem', padding: '0.8rem' }}
           />
           <button 
-            type="button" 
-            onClick={handleAddStudent}
+            type="submit" 
             className="btn"
             style={{ 
               width: '100%', 
@@ -171,7 +169,7 @@ const InputForm = ({ onNamesSubmit, t }) => {
           >
             {t.addStudent}
           </button>
-        </div>
+        </form>
       </div>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflow: 'hidden' }}>
