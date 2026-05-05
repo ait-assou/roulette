@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    .wheel-container { position: relative; width: 420px; height: 420px; }
+    .outer-wheel {
+      position: absolute; width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+      border: 6px solid rgba(255, 255, 255, 0.1);
+    }
+    .inner-wheel {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 220px; height: 220px; background: #1e293b; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.2); z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="wheel-container" id="wheel"></div>
+  <script>
+    const leaders = [{id: 'L1', name: 'Leader1'}, {id: 'L2', name: 'Leader2'}, {id: 'L3', name: 'Leader3'}];
+    const members = [
+      {id: 'M1', names: ['Mem1A', 'Mem1B']},
+      {id: 'M2', names: ['Mem2A', 'Mem2B']},
+      {id: 'M3', names: ['Mem3A', 'Mem3B']}
+    ];
+    
+    const numSegments = leaders.length;
+    const angleStep = 360 / numSegments;
+    const colors = ['#6366f1', '#8b5cf6', '#ec4899'];
+    
+    const background = `conic-gradient(${members.map((_, i) => {
+      return `${colors[i]} ${i * angleStep}deg ${(i + 1) * angleStep}deg`;
+    }).join(', ')})`;
+    
+    let html = `<div class="outer-wheel" style="background: ${background};">`;
+    members.forEach((member, i) => {
+      const midAngle = (i * angleStep) + (angleStep / 2);
+      const displayNames = member.names;
+      const namesHtml = displayNames.map(n => `<div style="margin-bottom: 4px;">${n}</div>`).join('');
+      
+      html += `
+        <div style="position: absolute; top: 50%; left: 50%; width: 100%; text-align: center; transform: translate(-50%, -50%) rotate(${midAngle}deg); pointer-events: none;">
+          <div style="transform: translateY(-150px); font-size: 0.9rem; font-weight: 800; line-height: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="transform: rotate(0deg);">
+              ${namesHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    html += '</div>';
+    
+    html += '<div class="inner-wheel" style="position: relative;">';
+    leaders.forEach((leader, i) => {
+      html += `
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(${i * angleStep}deg) translateY(-80px); font-weight: 900; font-size: 1rem;">
+          ${leader.name}
+        </div>
+      `;
+    });
+    html += '</div>';
+    
+    document.getElementById('wheel').innerHTML = html;
+  </script>
+</body>
+</html>

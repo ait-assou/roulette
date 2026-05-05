@@ -69,7 +69,7 @@ function App() {
   const [lang, setLang] = useState('fr');
   const [step, setStep] = useState('input');
   const [groupSize, setGroupSize] = useState(2);
-  
+
   const [leaders, setLeaders] = useState([]);
   const [members, setMembers] = useState([]); // This will store arrays for 3/4 person groups
   const [extraStudents, setExtraStudents] = useState([]);
@@ -86,7 +86,7 @@ function App() {
     setGroupSize(size);
     const shuffled = [...names].sort(() => Math.random() - 0.5);
     const count = shuffled.length;
-    
+
     const numGroups = Math.floor(count / size);
     if (numGroups === 0) {
       alert(lang === 'fr' ? 'Pas assez d\'étudiants !' : 'Not enough students!');
@@ -95,21 +95,21 @@ function App() {
 
     // Leaders: 1 per group
     const leadersList = shuffled.slice(0, numGroups).map((name, i) => ({ id: `L-${i}`, name }));
-    
+
     // Members: (size - 1) per group
     const membersPerGroup = size - 1;
     const membersPool = shuffled.slice(numGroups, numGroups + (numGroups * membersPerGroup));
-    
+
     const membersList = [];
     for (let i = 0; i < numGroups; i++) {
       const groupMembers = membersPool.slice(i * membersPerGroup, (i + 1) * membersPerGroup);
       membersList.push({ id: `M-${i}`, names: groupMembers });
     }
-    
+
     // Extras: remaining students
     const extras = shuffled.slice(numGroups + (numGroups * membersPerGroup));
     setExtraStudents(extras);
-    
+
     // Pre-calculate extra assignments so the wheel can show them
     const assignments = {};
     if (extras.length > 0) {
@@ -122,20 +122,20 @@ function App() {
       });
     }
     setExtraAssignments(assignments);
-    
+
     setLeaders(leadersList);
     setMembers(membersList);
     setStep('pairing');
   };
 
   const handleAllPairsFormed = (formedPairs) => {
-    // formedPairs is [{ leader, member: { names: [...] } }]
-    let groups = formedPairs.map((p, i) => ({
+    // formedPairs is [{ leader, member, memberIndex }]
+    let groups = formedPairs.map((p) => ({
       leader: p.leader,
       members: p.member.names,
-      extras: extraAssignments[i] || null
+      extras: extraAssignments[p.memberIndex] || null
     }));
-    
+
     setFinalGroups(groups);
   };
 
@@ -159,9 +159,9 @@ function App() {
               <p className="subtitle">
                 {extraStudents.length > 0 ? t.noteTrio : t.perfectEven}
               </p>
-              <Wheel 
-                leaders={leaders} 
-                members={members} 
+              <Wheel
+                leaders={leaders}
+                members={members}
                 extraAssignments={extraAssignments}
                 onAllPairsFormed={handleAllPairsFormed}
                 t={t}
@@ -169,7 +169,7 @@ function App() {
               />
             </div>
           </div>
-          
+
           <div className="stage-right">
             {finalGroups.length > 0 ? (
               <ResultList groups={finalGroups} t={t} />
